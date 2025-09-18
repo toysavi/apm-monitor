@@ -2,6 +2,8 @@
 # Create and switch to UAT branch
 
 # Push code to git
+
+git checkout -b UAT
 git add .
 git commit -m "update noted"
 git push origin uat
