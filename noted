@@ -1,3 +1,5 @@
+#################### Using Git Command Line #################################
+# Ensure you have git installed and configured with your credentials.
 
 # Push code to git
 git add .
