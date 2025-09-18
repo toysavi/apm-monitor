@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: apm-server
+  name: kibana
   namespace: monitoring
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: apm-server
+      app: kibana
   template:
     metadata:
       labels:
-        app: apm-server
+        app: kibana
     spec:
       containers:
-      - name: apm-server
-        image: docker.elastic.co/apm/apm-server:8.15.0
+      - name: kibana
+        image: docker.elastic.co/kibana/kibana:8.15.0
         ports:
-          - containerPort: 8200
+          - containerPort: 5601
         env:
           - name: ELASTICSEARCH_HOSTS
             value: "http://elasticsearch:9200"
@@ -31,8 +31,6 @@ spec:
               secretKeyRef:
                 name: elastic-credentials
                 key: elastic-password
-          - name: APM_SERVER_HOST
-            value: "0.0.0.0:8200"
         resources:
           requests:
             cpu: "500m"
