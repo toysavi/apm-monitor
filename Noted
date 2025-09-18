@@ -1,10 +1,10 @@
 
 # Push code to git
 git add .
-git commit -m "add"
-git push
+git commit -m "update noted"
+git push origin UAT
 
-
+############################################################################
 # Merge UAT to main
 git checkout main
 git fetch origin
@@ -14,8 +14,20 @@ git merge UAT
 # Push merged main
 
 git push origin main
-
+############################################################################
 # If there are conflicts, Git will mark the files; you need to manually resolve them, then:
 
 git add <resolved-files>
 git commit
+
+############################################################################
+# Create gitignore file
+# Switch to main
+git checkout main
+# Stop tracking the file and ignore it
+git rm --cached noted
+echo "noted" >> .gitignore
+git add .gitignore
+git commit -m "Ignore noted file in main"
+git push origin main
+############################################################################
