@@ -2,7 +2,7 @@
 # Push code to git
 git add .
 git commit -m "update noted"
-git push origin UAT
+git push origin uat
 
 ############################################################################
 # Merge UAT to main
