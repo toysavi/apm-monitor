@@ -12,9 +12,7 @@ git checkout main
 git fetch origin
 git pull origin main
 git merge UAT
-
 # Push merged main
-
 git push origin main
 ############################################################################
 # If there are conflicts, Git will mark the files; you need to manually resolve them, then:
