@@ -18,8 +18,8 @@ done
 
 echo "✅ Applying TLS secret..."
 kubectl create secret tls observability-tls \
-  --cert=certs/tls.crt \
-  --key=certs/tls.key \
+  --cert=/config/certs/tls.crt \
+  --key=/config/certs/tls.key \
   -n $NAMESPACE \
   --dry-run=client -o yaml | kubectl apply -f -
 
