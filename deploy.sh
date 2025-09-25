@@ -3,8 +3,8 @@ set -e
 
 NAMESPACE=observability
 
-echo "✅ Deploying Namespace..."
-kubectl apply -f ./deploy/namespace.yaml
+# echo "✅ Deploying Namespace..."
+# kubectl apply -f ./deploy/namespace.yaml
 
 echo "✅ Deploying Elasticsearch..."
 kubectl apply -f ./deploy/elasticsearch.yaml -n $NAMESPACE
