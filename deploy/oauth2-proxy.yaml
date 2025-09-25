@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: observability-ingress
+  namespace: observability
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: jaeger.yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jaeger-oauth2-proxy
+            port:
+              number: 80
+  - host: kibana.yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jaeger-oauth2-proxy
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - jaeger.yourdomain.com
+    - kibana.yourdomain.com
+    secretName: observability-tls

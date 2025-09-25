@@ -1,0 +1,32 @@
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: jaeger
+  namespace: observability
+spec:
+  strategy: production
+  collector:
+    replicas: 1
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "512Mi"
+      limits:
+        cpu: "500m"
+        memory: "1Gi"
+  query:
+    replicas: 1
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "200m"
+        memory: "512Mi"
+  agent:
+    strategy: DaemonSet
+  storage:
+    type: elasticsearch
+    options:
+      es:
+        server-urls: http://elasticsearch.observability.svc.cluster.local:9200

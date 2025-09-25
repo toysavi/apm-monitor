@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-NAMESPACE=monitoring
+NAMESPACE=observability
 
 # List of namespaces to ensure exist
-namespaces=("ingress-nginx" "metallb-system" "monitoring")
+namespaces=("ingress-nginx" "metallb-system" "observability")
 
 for ns in "${namespaces[@]}"; do
     if kubectl get namespace "$ns" >/dev/null 2>&1; then
@@ -16,16 +16,15 @@ for ns in "${namespaces[@]}"; do
 done
 
 
-
 echo "✅ Applying TLS secret..."
-kubectl create secret tls kibana-tls \
+kubectl create secret tls observability-tls \
   --cert=certs/tls.crt \
   --key=certs/tls.key \
   -n $NAMESPACE \
   --dry-run=client -o yaml | kubectl apply -f -
 
-echo "✅ Applying Elastic credentials secret..."
-kubectl apply -f build/elastic-secret.yaml
+echo "✅ Applying Observability  secret..."
+kubectl apply -f build/observability-secret.yaml
 
 echo "✅ Installing Ingress-NGINX..."
 sudo build/ingress-nginx.sh

@@ -1,9 +1,8 @@
-kubectl create namespace ingress-nginx
-
+#!/bin/bash
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 
 helm install ingress-nginx ingress-nginx/ingress-nginx \
-  --namespace ingress-nginx \
+  --namespace observability \
   --set controller.service.type=LoadBalancer \
   --set controller.service.loadBalancerIP=10.0.0.5
