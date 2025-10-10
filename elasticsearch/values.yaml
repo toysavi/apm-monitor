@@ -1,0 +1,51 @@
+clusterName: "es-cluster"
+replicas: 3
+minimumMasterNodes: 2
+esJavaOpts: "-Xmx2g -Xms2g"
+
+resources:
+  requests:
+    cpu: "2"
+    memory: "4Gi"
+  limits:
+    cpu: "4"
+    memory: "8Gi"
+
+volumeClaimTemplate:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: "standard"  # GKE storage class
+
+# Enable security
+security:
+  enabled: true
+  tls:
+    http: true
+    transport: true
+  auth:
+    elasticPassword: "changeme123"  # Use k8s Secret in production
+
+# Node roles
+nodeGroup:
+  master:
+    replicas: 3
+    roles: ["master"]
+    resources:
+      requests:
+        cpu: "1"
+        memory: "2Gi"
+      limits:
+        cpu: "2"
+        memory: "4Gi"
+  data:
+    replicas: 3
+    roles: ["data"]
+    resources:
+      requests:
+        cpu: "2"
+        memory: "4Gi"
+      limits:
+        cpu: "4"
+        memory: "8Gi"
