@@ -1,29 +1,77 @@
-elasticsearchHosts: "http://elasticsearch-master.elastic-system.svc.cluster.local:9200"
-elasticsearchUsername: "elastic"
-elasticsearchPassword: "yourStrongPassword"
-kibanaHost: "http://kibana-kibana.elastic-system.svc.cluster.local:5601"
+# apm-server/values.yaml
 
-replicaCount: 1
+# ----------------------------------------------------
+# 1. APM Server Configuration (apm-server.yml content)
+# ----------------------------------------------------
+apmConfig:
+  apm-server.yml: |
+    # APM Server listening host and port
+    apm-server:
+      host: "0.0.0.0:8200"
+      
+    # Security: Agent Secret Token
+    # This token must be configured in your application's APM Agent.
+    # We pull the value from an environment variable (see extraEnvs below).
+    apm-server.secret_token: "${APM_SECRET_TOKEN}"
 
+    # General queue settings
+    queue: {}
+
+    # Output configuration: Send data to Elasticsearch
+    output.elasticsearch:
+      # Use the Kubernetes internal service name for Elasticsearch
+      hosts: ["http://elasticsearch-master:9200"]
+      
+      # Authentication: Using environment variables which are linked to a Secret
+      username: "${ELASTICSEARCH_USERNAME}"
+      password: "${ELASTICSEARCH_PASSWORD}"
+      
+      # Optional: Enable SSL/TLS if Elasticsearch is secured
+      # protocol: https
+      # ssl.certificate_authorities:
+      #   - /usr/share/apm-server/config/certs/elastic-ca.pem
+
+    # Setup configurations (initial data loading, index templates, ILM)
+    setup:
+      kibana:
+        # Use the Kubernetes internal service name for Kibana
+        host: "kibana:5601"
+
+# ----------------------------------------------------
+# 2. Deployment/Kubernetes Configuration
+# ----------------------------------------------------
+
+# Set the number of APM Server replicas
+replicas: 1
+
+# Expose APM Server via a Kubernetes Service
 service:
   type: ClusterIP
   port: 8200
 
-resources:
-  requests:
-    cpu: 200m
-    memory: 512Mi
-  limits:
-    cpu: 500m
-    memory: 1Gi
+# ----------------------------------------------------
+# 3. Secure Credential Injection (Best Practice)
+# ----------------------------------------------------
 
-apmConfig:
-  apm-server.yml: |
-    apm-server:
-      host: "0.0.0.0:8200"
-    output.elasticsearch:
-      hosts: ["http://elasticsearch-master.elastic-system.svc.cluster.local:9200"]
-      username: "elastic"
-      password: "yourStrongPassword"
-    setup.kibana:
-      host: "http://kibana-kibana.elastic-system.svc.cluster.local:5601"
+# Environment variables to pass to the APM Server container
+extraEnvs:
+  # 1. Elasticsearch Credentials (for APM Server to write to ES)
+  # Assuming you have a Kubernetes Secret named 'elastic-credentials'
+  - name: "ELASTICSEARCH_USERNAME"
+    valueFrom:
+      secretKeyRef:
+        name: elastic-credentials
+        key: username
+  - name: "ELASTICSEARCH_PASSWORD"
+    valueFrom:
+      secretKeyRef:
+        name: elastic-credentials
+        key: password
+        
+  # 2. APM Agent Secret Token (for APM Agents to connect to APM Server)
+  # Assuming you have a Kubernetes Secret named 'apm-server-token'
+  - name: "APM_SECRET_TOKEN"
+    valueFrom:
+      secretKeyRef:
+        name: apm-server-token 
+        key: token
