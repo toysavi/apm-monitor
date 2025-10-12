@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/<your-org>/apm-monitor.git'
+    repoURL: 'https://github.com/toysavi/apm-monitor.git'
     targetRevision: main
     path: apm-server
     helm:
