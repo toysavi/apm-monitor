@@ -1,0 +1,7 @@
+apiVersion: v2
+name: apm-server
+version: 1.0.0
+dependencies:
+  - name: apm-server
+    version: "8.5.1"
+    repository: "https://helm.elastic.co"

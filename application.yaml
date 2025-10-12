@@ -1,20 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: elasticsearch
+  name: apm-monitor
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: 'https://github.com/toysavi/apm-monitor.git'
     targetRevision: main
-    path: elasticsearch
-    helm:
-      valueFiles:
-        - values.yaml
+    path: .
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: apm
+    namespace: elastic-system
   syncPolicy:
     automated:
       prune: true

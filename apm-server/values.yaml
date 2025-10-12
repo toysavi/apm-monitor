@@ -1,34 +1,29 @@
-replicas: 2
+elasticsearchHosts: "http://elasticsearch-master.elastic-system.svc.cluster.local:9200"
+elasticsearchUsername: "elastic"
+elasticsearchPassword: "yourStrongPassword"
+kibanaHost: "http://kibana-kibana.elastic-system.svc.cluster.local:5601"
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 8200
+
 resources:
   requests:
-    cpu: "500m"
-    memory: "1Gi"
+    cpu: 200m
+    memory: 512Mi
   limits:
-    cpu: "1"
-    memory: "2Gi"
+    cpu: 500m
+    memory: 1Gi
 
-apmServer:
-  host: "0.0.0.0"
-  port: 8200
-  secretToken: "changemeapm"  # Use Secret in production
-
-output:
-  elasticsearch:
-    hosts: ["https://elasticsearch-master:9200"]
-    username: "elastic"
-    password: "changeme123"
-
-ingress:
-  enabled: true
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-  hosts:
-    - host: apm.example.com
-      paths:
-        - path: /
-          pathType: Prefix
-tls:
-  - hosts:
-      - apm.example.com
-    secretName: apm-tls
+apmConfig:
+  apm-server.yml: |
+    apm-server:
+      host: "0.0.0.0:8200"
+    output.elasticsearch:
+      hosts: ["http://elasticsearch-master.elastic-system.svc.cluster.local:9200"]
+      username: "elastic"
+      password: "yourStrongPassword"
+    setup.kibana:
+      host: "http://kibana-kibana.elastic-system.svc.cluster.local:5601"
